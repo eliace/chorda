@@ -1,0 +1,147 @@
+@import '~bulma';
+@import '~bulma-checkradio';
+@import '~bulma-switch';
+@import '~bulma-slider/dist/css/bulma-slider';
+
+@import './bootstrap-carousel.scss';
+@import './spinner.scss';
+@import './overlay.scss';
+@import './alert.scss';
+
+.rows {
+  > .row {
+    padding: .8rem 0;
+  }
+}
+
+
+.toasts {
+  position: absolute;
+  z-index: 1000;
+  right: 0;
+  top: 0;
+  padding: 1rem;
+  min-width: 300px;
+
+  > .notification {
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
+  }
+
+  > .notification:not(:last-child) {
+    margin-bottom: 0.6rem;
+  }
+}
+
+.list-box {
+  .list-box-item {
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;    
+    //border-bottom: 1px solid #ddd;
+
+    &__content {
+      padding: 0.65rem 0;
+      flex: 2;
+      white-space: nowrap;
+    }
+
+    &__subtitle {
+      color: #888;
+      font-size: 0.8em;
+    }
+
+    &__avatar {
+      font-size: 1.2em;
+      border-radius: 50%;
+      height: 2.5rem;
+      width: 2.5rem;
+    }
+
+    > .image {
+      width: 2.5rem;
+    }
+
+    > .is-before {
+      margin-right: .8rem;
+    }
+
+    > .is-after {
+      margin-left: .8rem;
+    }
+
+    &:hover {
+      background-color: #f6f6f6;
+    }
+  }
+}
+
+.is-scrollable-y {
+  overflow-y: auto;
+}
+
+a {
+  .is-before:not(:last-child) {
+    margin-right: 0.325rem;
+  }
+}
+
+.is-action {
+  cursor: pointer;
+  color: $dark;
+//  color: rgba(0,0,0,0.9);
+
+  &.is-muted {
+    color: $text-light;
+  }
+
+  &:hover {
+    color: #000;
+  }
+
+  @each $status, $col in $colors {
+    &.is-#{$status}:hover {
+      color: nth($col, 1);
+    }
+  }
+    // &.is-info {color: $info;}
+    // &.is-primary {color: $primary;}
+    // &.is-link {color: $link;}
+}
+
+.control {
+  > .is-action {
+    height: 2.25em;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;    
+  }
+}
+
+.button {
+  .button-placeholder {
+    color: #ccc;
+  }
+}
+
+@each $status, $col in $colors {
+  .button.is-#{$status} {
+    .button-placeholder {
+      color: scale-color(nth($col, 2), $alpha: -50%);
+    }
+  }
+}
+
+
+.is-inverted {
+  .loader {
+    border-bottom-color: $grey;
+    border-left-color: $grey;
+  }
+  .loader-label {
+    color: $grey;
+  }  
+}
+
+.loader-label {
+  color: $light;
+}
