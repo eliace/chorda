@@ -212,7 +212,7 @@ export default () => {
                         this.opt('text', v)
                     },
                     allJoined: function ({data, animation}) {
-                        data.watch(e => e.name == 'changed', () => {
+                        data.$watch(e => e.name == 'changed', () => {
                             animation.flip()
                         }, this)
                     },
@@ -277,7 +277,7 @@ export default () => {
                   hide: 'list-complete',
                   mix: { withShowHide, withFLIP },
                   allJoined: function ({data, animation}) {
-                    data.watch(e => e.name == 'changed', () => {
+                    data.$watch(e => e.name == 'changed', () => {
                         animation.flip()
                     }, this)
                   }
@@ -338,10 +338,10 @@ export default () => {
                   },
                   mix: { withVelocity },
                   allJoined: function ({data, animation}) {
-                    data.watch(e => e.name == 'init', () => {
+                    data.$watch(e => e.name == 'init', () => {
                         return animation.show()
                     }, this)
-                    data.watch(e => e.name == 'destroy', () => {
+                    data.$watch(e => e.name == 'destroy', () => {
                         return animation.hide()
                     }, this)
                   }

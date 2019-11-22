@@ -189,7 +189,7 @@ export default () => {
       })
     },
     allJoined: function ({view, data}) {
-      view.watch(e => e.name == 'init', async () => {
+      view.$watch(e => e.name == 'init', async () => {
         data.breeds = await api.getBreeds()
       }, this)
       view.createAction('selectBreed', async (id) => {

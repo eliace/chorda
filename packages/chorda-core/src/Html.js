@@ -248,11 +248,16 @@ class Html {
 //      }
 
       if (opts.allJoined || (opts.join && opts.join['all']) || opts.joints) {
+
+        const overrides = {}
+
         for (let i in this.sources) {
           if (this.sources[i]._key) {
 //            this.sources[i]._key.push(i)
-            console.error('Simultaneous source joints', i, this.sources[i])
-            throw new Error('Simultaneous source joints')
+            console.warn('Simultaneous source joints', i, this.sources[i])
+            overrides[i] = {key: this.sources[i]._key, owner: this.sources[i]._owner}
+            // console.error('Simultaneous source joints', i, this.sources[i])
+            // throw new Error('Simultaneous source joints')
           }
 //          else {
           this.sources[i]._key = i
@@ -273,8 +278,14 @@ class Html {
         // }
         // this.joints['all'] = [unjoin]
         for (let i in this.sources) {
-          delete this.sources[i]._key
-          delete this.sources[i]._owner
+          if (overrides[i]) {
+            this.sources[i]._key = overrides[i].key
+            this.sources[i]._owner = overrides[i].owner
+          }
+          else {
+            delete this.sources[i]._key
+            delete this.sources[i]._owner  
+          }
         }
 
         isJoined = true
@@ -525,9 +536,9 @@ class Html {
 
     isJoined && this.tryInit()
 
-    if (this.isInitializing) {
-      debugger
-    }
+    // if (this.isInitializing) {
+    //   debugger
+    // }
 
     // - sources [i]
     // - allBound [i]
@@ -2078,12 +2089,14 @@ class Html {
 
     if (unjoinedSource) {
       if (this.isDestroying) {
-        unjoinedSource = this.sources[unjoinedSource]
-        for (let i in this.sources) {
-          if (this.sources[i] == unjoinedSource) {
-            delete this._sourcesToUnjoin[i]
-          }
-        }
+        const i = unjoinedSource
+        delete this._sourcesToUnjoin[i]
+        // unjoinedSource = this.sources[unjoinedSource]
+        // for (let i in this.sources) {
+        //   if (this.sources[i] == unjoinedSource) {
+        //     delete this._sourcesToUnjoin[i]
+        //   }
+        // }
       }
     }
     else {
@@ -2125,12 +2138,14 @@ class Html {
     if (joinedSource) {
 //      console.log('stop initializing', joinedSource)
       if (this.isInitializing) {
-        joinedSource = this.sources[joinedSource]
-        for (let i in this.sources) {
-          if (this.sources[i] == joinedSource) {
-            delete this._sourcesToJoin[i]
-          }
-        }
+        const i = joinedSource
+        delete this._sourcesToJoin[i]
+        // joinedSource = this.sources[joinedSource]
+        // for (let i in this.sources) {
+        //   if (this.sources[i] == joinedSource) {
+        //     delete this._sourcesToJoin[i]
+        //   }
+        // }
       }
     }
     else {

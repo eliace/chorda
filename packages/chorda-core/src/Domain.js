@@ -96,7 +96,7 @@ class Domain extends Source {
         if (!event.options.target || event.options.target == s.target) {
           // name test
           if (s.name == '*' || s.name == event.name) {
-            const r = event.options.method ? s.callback.apply(s.target, event.data) : s.callback.call(s.target, event, s)
+            const r = s.method ? s.callback.apply(s.target, event.data) : s.callback.call(s.target, event, s)
             if (r !== undefined) {
               result.push(r)
             }
@@ -223,8 +223,8 @@ class Domain extends Source {
 
 
   createAction (name, callback, target, options) {
-    this.subscribe(name, callback, undefined, target || this._owner)
-    return this.createEvent(name, {method: true, effect: Effect, ...options})
+    this.subscribe(name, callback, undefined, target || this._owner, true)
+    return this.createEvent(name, {effect: Effect, ...options})
   }
 
   createEvent (name, options, channel) {
@@ -274,7 +274,9 @@ class Domain extends Source {
     this.subscribe({
       when: (e) => e.name == 'changed' && e.ids && (name in e.ids), 
       callback: (e) => callback.call(this, e.cache[name], e.data[name]), 
-      target, channels: []})
+      target, 
+      channels: []
+    })
   }
 
   createProperty (name, options={}) {
