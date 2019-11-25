@@ -1,4 +1,4 @@
-import {Html, Layout, Domain} from '../../chorda-demo-react/src/chorda/node_modules/chorda-core'
+import {Html, Layout, Domain} from 'chorda-core'
 import {uuid, pluralize} from './utils'
 
 export default () => {

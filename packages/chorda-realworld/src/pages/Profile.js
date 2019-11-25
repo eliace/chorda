@@ -1,60 +1,50 @@
-import {Html, Layout, Source} from '../../src'
-import {Mutate} from '../utils'
+import {Html, Layout, Source, Domain} from 'chorda-core'
 import ColumnsLayout from '../layouts/Columns'
 import Nav from '../elements/Nav'
 import ArticleItem from '../elements/ArticleItem'
-import {getArticles} from '../effectors'
-
+//import {getArticles} from '../effectors'
+import * as api from '../api'
 
 export default () => {
-
-  // const _data = {
-  //   effectors: {
-  //     loadArticles: {
-  //       My: function () {
-  //         return this.loadArticles('ByAuthor', this.get('username'))
-  //       },
-  //       Favorited: () => {
-  //
-  //       },
-  //       Any: async function (type, p) {
-  //         this.set('articles', [])
-  //         const v = await getArticles[type](p)
-  //         this.set('articles', v.articles)
-  //       }
-  //     }
-  //   },
-  //   computors: {
-  //     followBtn: v => !v.user
-  //   },
-  //   watchers: {
-  //     beforeLoading: {
-  //       when: e => e.name = e.domain.loadArticles.init,
-  //       call: e => {
-  //         return this.resolve('beforeLoading')
-  //         // const {page} = e.target.domains
-  //         // page.set('loadingArticles', true)
-  //         // page.set('noArticles', false)
-  //       }
-  //     },
-  //     afterLoading: {
-  //       when: e => e.name = e.domain.loadArticles.done,
-  //       call: e => {
-  //         // const {page} = e.target.domains
-  //         // page.set('loadingArticles', true)
-  //         // page.set('noArticles', false)
-  //       }
-  //     }
-  //   }
-  // }
-
   return {
-    sources: {
-      selection: {
-        currentTab: 'my'
-      }
+    scope: {
+      view: () => new Domain({}, {
+        properties: {
+          tab: String,
+          isLoading: Boolean,
+          hasArticles: Boolean
+        }
+      }),
+      data: () => new Domain({}, {
+        properties: {
+          profile: {
+//            type: Object,
+            initial: () => {return {}}
+          },
+          articles: Array,
+          hasArticles: {
+            calc: (v) => v.articles && v.articles.length > 0
+          }
+        },
+        actions: {
+          loadProfile: async function (username) {
+            this.profile = {}
+            const v = await api.getProfile(username)
+            this.profile = v.profile
+          },
+          loadArticlesByAuthor: async function (username) {
+            this.articles = []
+            const v = await api.getArticlesByAuthor(username)
+            this.articles = v.articles
+
+          },
+          loadFavoritedArticles: async function (username) {
+            this.articles = []
+          }
+        }
+      })
     },
-    dataId: 'profile',
+//    dataId: 'profile',
     sourcesBound: function ({data, page, selection}) {
 
       const loadArticles = data.effect('loadArticles', this, async (type, p) => {
@@ -109,8 +99,49 @@ export default () => {
       console.log('[profile] data', e)
     },
 
+    joints: {
+      all: function ({data, page, view}) {
+
+        function reloadProfile () {
+          if (page.isCurrentUser) {
+            data.profile = page.$at('user').$clone()
+          }
+          else {
+            data.loadProfile(page.username)
+          }
+        }
+
+        function reloadArticles () {
+          data.loadArticlesByAuthor(page.username)
+        }
+
+
+        data.$on('init', reloadProfile)
+        page.$watch('username', reloadProfile)
+        data.$watch('profile', reloadArticles)
+        data.$on(data.loadArticlesByAuthor.start, () => {
+          view.isLoading = true
+        })
+        data.$on(data.loadArticlesByAuthor.done, () => {
+          view.isLoading = false
+        })
+        data.$watch('articles', () => {
+          view.hasArticles = data.articles && data.articles.length > 0
+        })
+
+        // view.createProperty('hasArticles', {
+        //   calc: () => {
+        //     return data.articles && data.articles.length > 0
+        //   }
+        // })
+      }
+    },
+
     css: 'profile-page',
     $userInfo: {
+      scope: {
+        data: (ctx) => ctx.data.$at('profile')
+      },
       css: 'user-info',
       $content: {
         css: 'container',
@@ -158,11 +189,16 @@ export default () => {
             text: ' Edit profile settings',
             href: '/#/settings'
           },
-          dynamic: {
-            followBtn: true,
-            settingsBtn: true
+          components: {
+            followBtn: false,
+            settingsBtn: false
           },
-          pageChanged: Mutate.Components
+          pageChanged: function (v, s) {
+            this.opt('components', {
+              followBtn: !s.isCurrentUser,
+              settingsBtn: s.isCurrentUser
+            })
+          }
         }
       }
     },
@@ -177,12 +213,12 @@ export default () => {
             as: Nav,
             css: 'nav-pills outline-active',
             defaultItem: {
-              selectionChanged: function (v) {
-                this.opt('active', v.currentTab == this.opt('key'))
+              viewChanged: function (v) {
+                this.opt('active', v.tab == this.opt('key'))
               },
-              onClick: function (e) {
+              onClick: function (e, {view}) {
                 e.preventDefault()
-                this.domain.selection.selectTab(this.opt('key'))
+                view.selectTab(this.opt('key'))
               }
             },
             items: [{
@@ -198,8 +234,18 @@ export default () => {
           as: ArticleItem
         },
         dataId: 'articles',
-        dataChanged: Mutate.Items,
-        pageChanged: Mutate.Components,
+        dataChanged: function (v, s) {
+          this.opt('items', s.$all())
+        },
+        pageChanged: function (v, s) {
+          this.opt('components', s.$snapshot())
+        },
+        viewChanged: function (v, s) {
+          this.opt('components', {
+            loadingArticles: s.isLoading,
+            noArticles: !s.isLoading && !s.hasArticles
+          })
+        },
         $loadingArticles: {
           css: 'article-preview',
           html: 'div',
@@ -211,7 +257,9 @@ export default () => {
           text: 'No articles are here... yet.'
         },
         components: {
-          articlesToggle: true
+          articlesToggle: true,
+          loadingArticles: false,
+          noArticles: false
         }
       }
     }

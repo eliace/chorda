@@ -7,12 +7,17 @@ import Field from '../elements/Field'
 
 export default () => {
   return {
-    sources: {
+    scope: {
       data: {}
     },
-    sourcesBound: function ({data, page}) {
-      data.set(page.get('user'))
+    joints: {
+      all: function ({data, page}) {
+        data.$value = page.$at('user').$clone()
+      }
     },
+    // sourcesBound: function ({data, page}) {
+    //   data.set(page.get('user'))
+    // },
     // dataRef: 'page',
     // dataId: 'user',
     css: 'settings-page',

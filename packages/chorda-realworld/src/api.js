@@ -15,6 +15,11 @@ export function getArticlesByTag (tag) {
     .then(response => response.data)
 }
 
+export function getArticlesByAuthor (author) {
+  return axios.get('https://conduit.productionready.io/api/articles?author='+author)
+    .then(response => response.data)
+}
+
 export function getUser (token) {
   return axios.get('https://conduit.productionready.io/api/user', {headers: {Authorization: 'Token '+token}})
     .then(response => response.data)
@@ -33,4 +38,14 @@ export function getArticle (slug) {
 export function sendRegister (data) {
   return axios.post('https://conduit.productionready.io/api/users', {user: data})
     .then(response => response.data, err => {throw err.response.data})
+}
+
+export function sendLogin (user) {
+  return axios.post('https://conduit.productionready.io/api/users/login', {user})
+    .then(response => response.data)
+}
+
+export function getProfile (username) {
+  return axios.get('https://conduit.productionready.io/api/profiles/'+username)
+    .then(response => response.data)
 }

@@ -104,8 +104,8 @@ class Source {
     //   this.compute(this.$get())
     // }
 
-    if (opts.onChanged) {
-      this.subscribe('changed', opts.onChanged)
+    if (opts.changed) {
+      this.subscribe('changed', opts.changed)
       // // FIXME костыль
       // this.$observe(this, (evt) => {
       //   if (evt.name == 'changed' || evt.name == 'init') {
@@ -394,7 +394,7 @@ class Source {
             this.src[k] = v
           }
           else if (this.isNested) {
-            this.src.$get()[this.$id][k] = v
+            this.src.$get(this.$id)[k] = v
           }
           else {
             this.src[this.$id][k] = v

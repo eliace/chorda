@@ -330,6 +330,10 @@ class Domain extends Source {
   // }
 
   $watch (when, callback, target) {
+    if (typeof when === 'string') {
+      const name = when
+      when = (e) => e.name == 'changed' && e.ids && name in e.ids
+    }
     this.subscribe({when, callback, target: target || this._owner, channels: []})
     //    this.watchers.push({when, callback, channels: [].concat(channel)})
   }

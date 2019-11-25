@@ -48,10 +48,11 @@ export default () => {
       },
       $nav: {
         scope: {
-          view: ctx => ctx.view.$entry('menu')
+          view: ctx => ctx.view.$at('menu')
         },
         html: 'ul',
         css: 'nav navbar-nav pull-xs-right',
+        components: false,
         viewChanged: function (v, s) {
           this.opt('components', s)
         },
@@ -121,8 +122,12 @@ export default () => {
         },
         $profile: {
           key: 'profile',
-//          linkTo: '/#/profile'
-          viewChanged: function (v) {
+          linkTo: '/#/profile',
+//          pageId: 'user',
+          pageChanged: function (v, s) {
+            this.opt('text', s.user.username)
+            this.opt('linkTo', '/#/@'+s.user.username)
+            this.opt('active', s.current == this.options.key && s.isCurrentUser)
             // console.log('data', this.domain.data.get())
             // this.opt('text', v.user.username)
             // this.opt('linkTo', '/#/@'+v.user.username)

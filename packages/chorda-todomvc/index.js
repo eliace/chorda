@@ -1,8 +1,8 @@
 //import {createProjector} from 'maquette'
 import createApp from './src/app'
 import {Router} from 'director/build/director'
-import { Config } from '../chorda-demo-react/src/chorda/node_modules/chorda-core'
-import * as ReactAdapter from '../chorda-demo-react/src/chorda/node_modules/chorda-react'
+import { Config } from 'chorda-core'
+import * as ReactAdapter from 'chorda-react'
 
 Config.use(ReactAdapter.Context)
 

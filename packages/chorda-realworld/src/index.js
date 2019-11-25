@@ -8,9 +8,9 @@ import Footer from './components/Footer'
 import Home from './pages/Home'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
-// import Profile from './pages/Profile'
+import Profile from './pages/Profile'
 import Settings from './pages/Settings'
-// import Edit from './pages/Edit'
+import Edit from './pages/Edit'
 import Article from './pages/Article'
 
 import {getUser} from './api'
@@ -51,8 +51,10 @@ const routes = {
 //    page.mergeWith({current: ''})
   },
   '/@:username': function (username) {
-    page.set('username', username)
-    page.setCurrent('profile')
+    page.username = username
+    page.current = 'profile'
+    // page.set('username', username)
+    // page.setCurrent('profile')
     // data.loadProfile(username)
     // page.mergeWith({current: '', username})
   },
@@ -79,17 +81,20 @@ const page = new Domain({
   current: null,
 }, {
   properties: {
+    user: Object,
     current: String,
     slug: String,
+    username: String,
     home: v => v.current == 'home',
     signIn: v => v.current == 'signIn',
     signUp: v => v.current == 'signUp',
-    settings: v => v.current == 'settings',
+    settings: v => v.current == 'settings' && v.user,
     edit: v => v.current == 'edit',
     article: v => v.current == 'article',
     profile: v => v.current == 'profile',
     header: v => !!v.current,
-    footer: v => !!v.current
+    footer: v => !!v.current,
+    isCurrentUser: (v) => v.username && v.user && v.user.username == v.username
   },
   actions: {
     setCurrent: function (v) {
@@ -104,16 +109,27 @@ const page = new Domain({
 })
 
 const data = new Domain({
-
+  profile: {
+    user: {}
+  }
 }, {
 
 })
 
-const token = new Domain(localStorage.getItem('token'), {
+const token = new Domain(null, {
+  initial: function () {
+    return localStorage.getItem('token')
+  },
   changed: function (evt) {
-    if (evt.name == 'changed') {
 //      console.log('change token', evt.data)
-      localStorage.setItem('token', evt.data)
+    localStorage.setItem('token', evt.data)
+  }
+})
+
+const router = new Domain({}, {
+  actions: {
+    toHome: function () {
+      window.location.assign('/#/')
     }
   }
 })
@@ -124,16 +140,14 @@ return new Html({
   sources: {
     page,
     data,
-    router: {
-
-    },
+    router,
     token
   },
   $header: Header,
   $article: Article,
-  // $edit: Edit,
+  $edit: Edit,
   $settings: Settings,
-  // $profile: Profile,
+  $profile: Profile,
   $home: Home,
   $signUp: SignUp,
   $signIn: SignIn,
@@ -141,6 +155,20 @@ return new Html({
   components: false,
   pageChanged: function (v, s) {
     this.opt('components', s.$snapshot())
+  },
+  joints: {
+    all: function ({page, token, router}) {
+      page.createAction('login', (user) => {
+        token.$set(user.token)
+        page.$set('user', user)
+        router.toHome()          
+      })
+      page.$on('init', () => {
+        if (!page.user && token.$value) {
+          page.loadUser(token.$value)
+        }
+      })
+    }
   },
   _allJoined: function ({page, token}) {
     const { setCurrent } = page.actions
@@ -236,6 +264,6 @@ return new Html({
 
 }
 
-_router.init()
+_router.init('/')
 
 window._app = app

@@ -62,7 +62,8 @@ module.exports = {
     ],
     resolve: {
         alias: {
-            'chorda-core': path.resolve('../chorda-core')
+            'chorda-core': path.resolve('../chorda-core/src'),
+            'chorda-react': path.resolve('../chorda-react/src')
         }
     }
 }
