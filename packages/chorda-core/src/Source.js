@@ -615,7 +615,16 @@ class Source {
 
 
   $at (k) {
-    return this.$entry(k)
+    if (Array.isArray(k)) {
+      let c = this
+      for (let i = 0; i < k.length; i++) {
+        c = c.$entry(k[i])
+      }
+      return c
+    }
+    else {
+      return this.$entry(k)
+    }
   }
 
   $entry (k) {
