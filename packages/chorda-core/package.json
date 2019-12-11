@@ -1,7 +1,6 @@
 {
-  "name": "chorda-core",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@chorda/core",
+  "version": "0.0.1",
   "main": "index.js",
   "scripts": {
     "test": "mochapack --webpack-config test/webpack.config.test.js \"test/spec/**/*.spec.js\" || true",
@@ -10,7 +9,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/plugin-proposal-function-bind": "^7.7.4",
     "@babel/plugin-transform-runtime": "^7.7.6",
@@ -18,16 +17,24 @@
     "babel-loader": "^8.0.6",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "compression-webpack-plugin": "^3.0.0",
+    "compression-webpack-plugin": "^3.0.1",
     "html-webpack-plugin": "^3.2.0",
     "mocha": "^6.2.1",
     "mocha-loader": "^3.0.0",
     "mochapack": "^1.1.13",
     "parcel": "^1.12.4",
-    "webpack": "^4.41.1"
+    "webpack": "^4.41.1",
+    "webpack-cli": "^3.3.10"
   },
   "typings": "./index.d.ts",
   "dependencies": {
     "classnames": "^2.2.6"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "description": "",
+  "publishConfig": {
+    "access": "public"
   }
 }

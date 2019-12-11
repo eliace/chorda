@@ -1,6 +1,6 @@
 {
-  "name": "chorda-react",
-  "version": "1.0.0",
+  "name": "@chorda/react",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,16 +9,17 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.7.6",
-    "@types/react": "^16.9.15",
+    "@types/react": "^16.9.16",
     "babel-loader": "^8.0.6",
     "create-react-class": "^15.6.3",
     "parcel": "^1.12.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "webpack": "^4.41.2"
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
   },
   "dependencies": {
     "classnames": "^2.2.6"
@@ -30,5 +31,8 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2"
   },
-  "typings": "./index.d.ts"
+  "typings": "./index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  }
 }
