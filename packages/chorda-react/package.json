@@ -1,6 +1,6 @@
 {
   "name": "@chorda/react",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "classnames": "^2.2.6"
   },
   "peerDependencies": {
-    "chorda-core": "^1.0.0",
+    "@chorda/core": "0.0.2",
     "@types/react": "^16.9.11",
     "create-react-class": "^15.6.3",
     "react": "^16.10.2",

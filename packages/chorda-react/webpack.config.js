@@ -7,7 +7,7 @@ module.exports = {
         app: './src/index.js'
     },
     output: {
-        library: 'chorda-react',
+        library: 'ChordaReact',
         libraryTarget: 'umd',
         filename: 'chorda-react.js'    
     },
@@ -27,13 +27,13 @@ module.exports = {
     plugins: [],
     resolve: {
         alias: {
-            'chorda-core': path.resolve('../chorda-core/src')
+            '@chorda/core': path.resolve('../chorda-core/src')
         }    
     },
     externals: {
-        'chorda-core': 'chorda-core',
-        'react': 'react',
-        'create-react-class': 'create-react-class',
-        'react-dom': 'react-dom'
+        '@chorda/core': 'Chorda',
+        'react': 'React',
+        'create-react-class': 'createReactClass',
+        'react-dom': 'ReactDOM'
     }
 }

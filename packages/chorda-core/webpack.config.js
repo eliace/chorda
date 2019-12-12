@@ -8,7 +8,7 @@ module.exports = {
         app: './src/index.js'
     },
     output: {
-        library: 'chorda-core',
+        library: 'Chorda',
         libraryTarget: 'umd',
         filename: 'chorda-core.js'    
     },

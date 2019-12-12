@@ -4,7 +4,7 @@ import classnames from 'classnames'
 
 const _TYPES = {}
 
-window.Chorda = function (props) {
+window._ChordaComponent = function (props) {
   const {_type, children, _props} = props
   return React.createElement(_type, _props, children)
 }
@@ -26,7 +26,7 @@ export function createVNode (type, props, children) {
   if (props._owner) {
     const name = props._owner.constructor.name == 'Html' ? type : props._owner.constructor.name
     if (!_TYPES[name]) {
-      _TYPES[name] = new Function('return function '+name+' (props) {return Chorda(props)}')()
+      _TYPES[name] = new Function('return function '+name+' (props) {return _ChordaComponent(props)}')()
     }
     const {_owner, key, ...newProps} = props//_type: type, _props: props, key: props.key}
     props = {_type: type, _props: newProps, key}
